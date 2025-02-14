@@ -17,7 +17,7 @@ public class AssignedTag {
         this.atCreationDate = assignedTagBuilder.getAtCreationDate();
     }
 
-    public AssignedTagBuilder getAssignedTagBuilder () {
+    public static AssignedTagBuilder getAssignedTagBuilder () {
         return new AssignedTagBuilder();
     }
 

@@ -1,5 +1,7 @@
 package nl.thomas.arensman.todo.list.builders;
 
+import nl.thomas.arensman.todo.list.models.SubTask;
+
 import java.time.LocalDateTime;
 
 public class SubTaskBuilder {
@@ -62,5 +64,9 @@ public class SubTaskBuilder {
 
     public LocalDateTime getSubCreationDate() {
         return subCreationDate;
+    }
+
+    public SubTask build () {
+        return new SubTask(this);
     }
 }

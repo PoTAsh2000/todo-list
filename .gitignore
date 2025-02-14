@@ -1,4 +1,3 @@
-HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -26,9 +25,12 @@ target/
 /nbdist/
 /.nb-gradle/
 build/
-target/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
 ### VS Code ###
 .vscode/
+
+### Other ###
+src/main/resources/configs/datasourcePassword.txt
+src/main/resources/configs/encryptionKey.txt

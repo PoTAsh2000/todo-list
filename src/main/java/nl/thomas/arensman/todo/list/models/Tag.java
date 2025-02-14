@@ -17,7 +17,7 @@ public class Tag {
         this.tagCreationDate = tagBuilder.getTagCreationDate();
     }
 
-    public TagBuilder getTagBuilder () {
+    public static TagBuilder getTagBuilder () {
         return new TagBuilder();
     }
 

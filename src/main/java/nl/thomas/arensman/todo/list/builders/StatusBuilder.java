@@ -1,12 +1,14 @@
 package nl.thomas.arensman.todo.list.builders;
 
+import nl.thomas.arensman.todo.list.models.Status;
+
 import java.time.LocalDateTime;
 
 public class StatusBuilder {
     private int statusId;
     private String statusName;
     private String statusHexColor;
-    private LocalDateTime statusCreationDate;
+    private String statusCreationDate;
 
     public StatusBuilder setStatusId(int statusId) {
         this.statusId = statusId;
@@ -23,7 +25,7 @@ public class StatusBuilder {
         return this;
     }
 
-    public StatusBuilder setStatusCreationDate(LocalDateTime statusCreationDate) {
+    public StatusBuilder setStatusCreationDate(String statusCreationDate) {
         this.statusCreationDate = statusCreationDate;
         return this;
     }
@@ -40,7 +42,11 @@ public class StatusBuilder {
         return statusHexColor;
     }
 
-    public LocalDateTime getStatusCreationDate() {
+    public String getStatusCreationDate() {
         return statusCreationDate;
+    }
+
+    public Status build() {
+        return new Status(this);
     }
 }

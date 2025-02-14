@@ -21,7 +21,7 @@ public class Task {
         this.taskCreationDate = taskBuilder.getTaskCreationDate();
     }
 
-    public TaskBuilder getTaskBuilder () {
+    public static TaskBuilder getTaskBuilder () {
         return new TaskBuilder();
     }
 

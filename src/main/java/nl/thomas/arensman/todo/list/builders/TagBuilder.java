@@ -1,5 +1,7 @@
 package nl.thomas.arensman.todo.list.builders;
 
+import nl.thomas.arensman.todo.list.models.Tag;
+
 import java.time.LocalDateTime;
 
 public class TagBuilder {
@@ -42,5 +44,9 @@ public class TagBuilder {
 
     public LocalDateTime getTagCreationDate() {
         return tagCreationDate;
+    }
+
+    public Tag build() {
+        return new Tag(this);
     }
 }

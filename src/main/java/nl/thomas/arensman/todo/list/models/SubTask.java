@@ -21,7 +21,7 @@ public class SubTask {
         this.subCreationDate = subTaskBuilder.getSubCreationDate();
     }
 
-    public SubTaskBuilder getSubTaskBuilder () {
+    public static SubTaskBuilder getSubTaskBuilder () {
         return new SubTaskBuilder();
     }
 

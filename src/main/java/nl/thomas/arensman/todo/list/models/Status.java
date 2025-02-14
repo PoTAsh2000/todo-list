@@ -8,7 +8,7 @@ public class Status {
     private final int statusId;
     private final String statusName;
     private final String statusHexColor;
-    private final LocalDateTime statusCreationDate;
+    private final String statusCreationDate;
 
     public Status(StatusBuilder statusBuilder) {
         this.statusId = statusBuilder.getStatusId();
@@ -17,7 +17,7 @@ public class Status {
         this.statusCreationDate = statusBuilder.getStatusCreationDate();
     }
 
-    public StatusBuilder getStatusBuilder () {
+    public static StatusBuilder getStatusBuilder () {
         return new StatusBuilder();
     }
 
@@ -33,7 +33,7 @@ public class Status {
         return statusHexColor;
     }
 
-    public LocalDateTime getStatusCreationDate() {
+    public String getStatusCreationDate() {
         return statusCreationDate;
     }
 }
