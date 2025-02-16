@@ -68,6 +68,26 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.jsonschema2pojo</groupId>
+                <artifactId>jsonschema2pojo-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <configuration>
+                    <sourceType>json</sourceType>
+                    <sourceDirectory>${basedir}/src/main/resources/jsonSchemas/</sourceDirectory>
+                    <outputDirectory>target/generated-sources/jsonschema2pojo</outputDirectory>
+                    <targetPackage>nl.thomas.arensman.todo.list.json.schemas</targetPackage>
+                    <includeAdditionalProperties>false</includeAdditionalProperties>
+                    <useBigDecimals>true</useBigDecimals>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>

@@ -8,19 +8,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static nl.thomas.arensman.todo.list.utils.HttpUtils.*;
+import static nl.thomas.arensman.todo.list.utils.database.StatusDatabaseUtils.selectAllStatuses;
 
 @RestController
 public class GetStatusList {
 
-    private static final String SELECT_ALL_STATUSES_STATEMENT = "SELECT * FROM `statuses`";
     private static final String GET_STATUSES_LIST_ENDPOINT = "/status/list";
 
     @Autowired
@@ -34,7 +32,7 @@ public class GetStatusList {
             List<Status> statusList = new ArrayList<>();
             appendResultsToStatusList(resultSet, statusList);
 
-            return createResponseEntity(statusList, HttpStatus.ACCEPTED, getDefaultHeaders());
+            return createResponseEntity(statusList, HttpStatus.OK, getDefaultHeaders());
         } catch (Exception e) {
             return createErrorResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR, getDefaultHeaders());
         }
@@ -49,15 +47,6 @@ public class GetStatusList {
                     .setStatusCreationDate(resultSet.getString("status_creation_date"))
                     .build();
             statusList.add(status);
-        }
-    }
-
-    private static ResultSet selectAllStatuses(DataSource dataSource) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_STATUSES_STATEMENT);
-            return preparedStatement.executeQuery();
-        } catch (SQLException e) {
-            throw new SQLException("An exception occurred while trying to select data from statuses table");
         }
     }
 }

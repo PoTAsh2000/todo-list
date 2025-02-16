@@ -10,17 +10,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static nl.thomas.arensman.todo.list.utils.database.StatusDatabaseUtils.selectStatusWhereName;
 import static nl.thomas.arensman.todo.list.utils.HttpUtils.*;
 
 @RestController
 public class GetStatusByName {
 
-    private static final String SELECT_STATUS_WHERE_NAME_STATEMENT = "SELECT * FROM `statuses` WHERE `status_name` = ?";
     private static final String GET_STATUS_WHERE_NAME = "/status/name/{statusName}";
 
     @Autowired
@@ -29,11 +27,11 @@ public class GetStatusByName {
     @GetMapping(GET_STATUS_WHERE_NAME)
     public ResponseEntity<String> getGetStatusWhereName(@PathVariable String statusName) throws SQLException, JsonProcessingException {
         try {
-            ResultSet result = selectStatusWhereId(dataSource, statusName);
+            ResultSet result = selectStatusWhereName(dataSource, statusName);
             validateResultSet(result, statusName);
 
             Status status = getStatusFromResultSet(result);
-            return createResponseEntity(status, HttpStatus.ACCEPTED, getDefaultHeaders());
+            return createResponseEntity(status, HttpStatus.OK, getDefaultHeaders());
         } catch (Exception e) {
             return createErrorResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR, getDefaultHeaders());
         }
@@ -46,16 +44,6 @@ public class GetStatusByName {
                 .setStatusHexColor(result.getString("status_hex_color"))
                 .setStatusCreationDate(result.getString("status_creation_date"))
                 .build();
-    }
-
-    public static ResultSet selectStatusWhereId (DataSource dataSource, String statusName) {
-        try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_STATUS_WHERE_NAME_STATEMENT);
-            preparedStatement.setString(1, statusName);
-            return preparedStatement.executeQuery();
-        } catch (SQLException e) {
-            throw new RuntimeException("An exception occurred while trying to select status by status_name: " + statusName);
-        }
     }
 
     private static void validateResultSet(ResultSet resultSet, String statusName) throws SQLException {
