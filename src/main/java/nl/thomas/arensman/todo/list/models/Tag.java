@@ -8,7 +8,7 @@ public class Tag {
     private final int tagId;
     private final String tagName;
     private final String tagHexColor;
-    private final LocalDateTime tagCreationDate;
+    private final String tagCreationDate;
 
     public Tag(TagBuilder tagBuilder) {
         this.tagId = tagBuilder.getTagId();
@@ -33,7 +33,7 @@ public class Tag {
         return tagHexColor;
     }
 
-    public LocalDateTime getTagCreationDate() {
+    public String getTagCreationDate() {
         return tagCreationDate;
     }
 }
