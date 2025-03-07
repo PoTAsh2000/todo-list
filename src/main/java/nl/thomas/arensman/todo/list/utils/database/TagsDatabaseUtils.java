@@ -1,5 +1,6 @@
 package nl.thomas.arensman.todo.list.utils.database;
 
+import nl.thomas.arensman.todo.list.json.schemas.TagBodyRequest;
 import nl.thomas.arensman.todo.list.models.Tag;
 
 import javax.sql.DataSource;
@@ -9,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static nl.thomas.arensman.todo.list.models.Tag.getTagBuilder;
+import static nl.thomas.arensman.todo.list.utils.Utils.strIsNullOrBlank;
 
 public class TagsDatabaseUtils {
 
@@ -51,6 +53,20 @@ public class TagsDatabaseUtils {
                 .setTagHexColor(resultSet.getString("tag_hex_color"))
                 .setTagCreationDate(resultSet.getString("tag_creation_date"))
                 .build();
+    }
+
+    public static void postNewTag (DataSource dataSource, TagBodyRequest tagBodyRequest) {
+        final String query = "INSERT INTO `tags` (`tag_name`, `tag_hex_color`) VALUES (?, ?)";
+        final String tagName = tagBodyRequest.getTagName().toUpperCase();
+        final String tagHexColor = tagBodyRequest.getTagHexColor().toLowerCase();
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, tagName);
+            preparedStatement.setString(2, tagHexColor);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException("An exception occurred while trying to insert new tag: " + tagName);
+        }
     }
 
 }

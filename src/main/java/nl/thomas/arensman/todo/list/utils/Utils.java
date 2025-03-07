@@ -49,4 +49,25 @@ public class Utils {
             throw new RuntimeException("Failed to unmarshal input JSON String to class of: " + targetObject.getClass());
         }
     }
+
+    public static void validateHexColor(String hexColor) {
+        final String hexColorConstraints = "Hex Color field constraints: Hex color must start with an '#' and the code must be 7 characters long, including the '#'. The code only allows characters of pattern [a-zA-Z0-9]";
+
+        if (strIsNullOrBlank(hexColor))
+            return;
+
+        if (!hexColor.startsWith("#"))
+            throw new RuntimeException("Hex color does not start with a '#'. " + hexColorConstraints);
+
+        if (hexColor.length() != 7)
+            throw new RuntimeException("Hex color length does not add up to 7. " + hexColorConstraints);
+
+        final String hexColorCode = hexColor.substring(1); // Get the hex color code excluding the #
+        final String invalidCharactersRemaining = hexColorCode.replaceAll("[a-zA-Z0-9]", ""); // remove valid characters from String, if any characters remain the hex code must be invalid
+        if (!strIsNullOrBlank(invalidCharactersRemaining)) {
+            final char[] invalidCharacterArray = invalidCharactersRemaining.toCharArray();
+            final String invalidCharacters = String.join(",", charArrayToStringArray(invalidCharacterArray));
+            throw new RuntimeException(String.format("Hex color code contains invalid characters: [%s]. %s", invalidCharacters, hexColorConstraints));
+        }
+    }
 }

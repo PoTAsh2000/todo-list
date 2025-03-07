@@ -45,7 +45,7 @@ public class PostNewStatus {
 
         final String hexColor = statusBodyRequest.getStatusHexColor();
         if (!strIsNullOrBlank(hexColor))
-            validateStatusHexColor(hexColor);
+            validateHexColor(hexColor);
     }
 
     private static void validateStatusName (DataSource dataSource, String statusName) throws SQLException {
@@ -64,23 +64,5 @@ public class PostNewStatus {
         final ResultSet resultSet = selectStatusWhereName(dataSource, statusName);
         if (resultSet.next())
             throw new RuntimeException(String.format("Status '%s' already exists in the database", statusName));
-    }
-
-    private static void validateStatusHexColor (String hexColor) {
-        final String hexColorConstraints = "Hex Color field constraints: Hex color must start with an '#' and the code must be 7 characters long, including the '#'. The code only allows characters of pattern [a-zA-Z0-9]";
-
-        if (!hexColor.startsWith("#"))
-            throw new RuntimeException("Hex color does not start with a '#'. " + hexColorConstraints);
-
-        if (hexColor.length() != 7)
-            throw new RuntimeException("Hex color length does not add up to 7. " + hexColorConstraints);
-
-        final String hexColorCode = hexColor.substring(1); // Get the hex color code excluding the #
-        final String invalidCharactersRemaining = hexColorCode.replaceAll("[a-zA-Z0-9]", ""); // remove valid characters from String, if any characters remain the hex code must be invalid
-        if (!strIsNullOrBlank(invalidCharactersRemaining)) {
-            final char[] invalidCharacterArray = invalidCharactersRemaining.toCharArray();
-            final String invalidCharacters = String.join(",", charArrayToStringArray(invalidCharacterArray));
-            throw new RuntimeException(String.format("Hex color code contains invalid characters: [%s]. %s", invalidCharacters, hexColorConstraints));
-        }
     }
 }
