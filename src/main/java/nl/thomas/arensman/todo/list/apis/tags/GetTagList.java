@@ -15,7 +15,6 @@ import java.util.List;
 
 import static nl.thomas.arensman.todo.list.models.Tag.getTagBuilder;
 import static nl.thomas.arensman.todo.list.utils.HttpUtils.*;
-import static nl.thomas.arensman.todo.list.utils.Utils.marshalObjectToJsonString;
 import static nl.thomas.arensman.todo.list.utils.database.TagsDatabaseUtils.selectTagList;
 
 @RestController
