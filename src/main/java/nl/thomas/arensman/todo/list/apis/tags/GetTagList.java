@@ -16,6 +16,7 @@ import java.util.List;
 import static nl.thomas.arensman.todo.list.models.Tag.getTagBuilder;
 import static nl.thomas.arensman.todo.list.utils.HttpUtils.*;
 import static nl.thomas.arensman.todo.list.utils.database.TagsDatabaseUtils.selectTagList;
+import static nl.thomas.arensman.todo.list.utils.database.TagsDatabaseUtils.tagResultSetToTag;
 
 @RestController
 public class GetTagList {
@@ -32,24 +33,11 @@ public class GetTagList {
 
             List<Tag> tags = new ArrayList<>();
             while (resultSet.next())
-                tags.add(resultSetToTag(resultSet));
+                tags.add(tagResultSetToTag(resultSet));
 
             return createResponseEntity(tags, HttpStatus.OK, getDefaultHeaders());
         } catch (Exception e) {
             return createErrorResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR, getDefaultHeaders());
-        }
-    }
-
-    private static Tag resultSetToTag (ResultSet resultSet) {
-        try {
-            return getTagBuilder()
-                    .setTagId(resultSet.getInt("tag_id"))
-                    .setTagName(resultSet.getString("tag_name"))
-                    .setTagHexColor(resultSet.getString("tag_hex_color"))
-                    .setTagCreationDate(resultSet.getString("tag_creation_date"))
-                    .build();
-        } catch (SQLException e) {
-            throw new RuntimeException("An exception occurred while trying to parse db result to tag");
         }
     }
 }

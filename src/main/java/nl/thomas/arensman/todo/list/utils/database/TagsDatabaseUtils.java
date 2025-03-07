@@ -1,10 +1,14 @@
 package nl.thomas.arensman.todo.list.utils.database;
 
+import nl.thomas.arensman.todo.list.models.Tag;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import static nl.thomas.arensman.todo.list.models.Tag.getTagBuilder;
 
 public class TagsDatabaseUtils {
 
@@ -38,6 +42,15 @@ public class TagsDatabaseUtils {
         } catch (SQLException e) {
             throw new RuntimeException("An exception occurred while trying to select tag by tag_name: " + tagName);
         }
+    }
+
+    public static Tag tagResultSetToTag (ResultSet resultSet) throws SQLException {
+        return getTagBuilder()
+                .setTagId(resultSet.getInt("tag_id"))
+                .setTagName(resultSet.getString("tag_name"))
+                .setTagHexColor(resultSet.getString("tag_hex_color"))
+                .setTagCreationDate(resultSet.getString("tag_creation_date"))
+                .build();
     }
 
 }

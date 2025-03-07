@@ -9,30 +9,29 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.sql.DataSource;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static nl.thomas.arensman.todo.list.models.Tag.getTagBuilder;
 import static nl.thomas.arensman.todo.list.utils.HttpUtils.*;
-import static nl.thomas.arensman.todo.list.utils.Utils.strIsIntParsable;
-import static nl.thomas.arensman.todo.list.utils.database.TagsDatabaseUtils.selectTagWhereId;
+import static nl.thomas.arensman.todo.list.utils.database.TagsDatabaseUtils.selectTagWhereName;
 import static nl.thomas.arensman.todo.list.utils.database.TagsDatabaseUtils.tagResultSetToTag;
 
 @RestController
-public class GetTagById {
+public class GetTagByName {
+
+    private static final String GET_TAG_BY_NAME = "tag/name/{name}";
 
     @Autowired
     private DataSource dataSource;
 
-    private static final String GET_TAGS_BY_ID = "/tag/{tagId}";
-
-    @GetMapping(GET_TAGS_BY_ID)
-    public ResponseEntity<String> getStatusById(@PathVariable String tagId) {
+    @GetMapping(GET_TAG_BY_NAME)
+    public ResponseEntity<String> getTagByName(@PathVariable String name) {
         try {
-            validateTagId(tagId);
+            name = name.toUpperCase();
 
-            ResultSet resultSet = selectTagWhereId(dataSource, Integer.parseInt(tagId));
-            validateTagResultSet(resultSet, tagId);
+            ResultSet resultSet = selectTagWhereName(dataSource, name);
+            validateResultSet(resultSet, name);
 
             Tag tag = tagResultSetToTag(resultSet);
             return createResponseEntity(tag, HttpStatus.OK, getDefaultHeaders());
@@ -41,13 +40,9 @@ public class GetTagById {
         }
     }
 
-    private void validateTagResultSet(ResultSet resultSet, String tagId) throws SQLException {
+    private void validateResultSet(ResultSet resultSet, String name) throws SQLException {
         if (!resultSet.next())
-            throw new RuntimeException("No result where found with tag_id: " + tagId);
+            throw new RuntimeException("No results found where tag_name: " + name);
     }
 
-    private static void validateTagId (String tagId) {
-        if (!strIsIntParsable(tagId))
-            throw new RuntimeException("Provided tag_id is invalid. Must be of type Integer");
-    }
 }
