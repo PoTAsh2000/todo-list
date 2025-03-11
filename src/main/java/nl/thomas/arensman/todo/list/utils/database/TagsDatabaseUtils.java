@@ -72,10 +72,12 @@ public class TagsDatabaseUtils {
 
     public static void updateTagWhereId(DataSource dataSource, TagBodyRequest tagBodyRequest, int tagId) {
         final String query = "UPDATE `tags` SET `tag_name` = ?, `tag_hex_color` = ? WHERE `tag_id` = ?";
+        final String tagName = tagBodyRequest.getTagName().toUpperCase();
+        final String tagHexColor = tagBodyRequest.getTagHexColor().toLowerCase();
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, tagBodyRequest.getTagName());
-            preparedStatement.setString(2, tagBodyRequest.getTagHexColor());
+            preparedStatement.setString(1, tagName);
+            preparedStatement.setString(2, tagHexColor);
             preparedStatement.setInt(3, tagId);
             preparedStatement.execute();
         } catch (SQLException e) {
