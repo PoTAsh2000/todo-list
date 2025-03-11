@@ -1,5 +1,7 @@
 package nl.thomas.arensman.todo.list.utils.database;
 
+import nl.thomas.arensman.todo.list.models.Status;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -79,5 +81,14 @@ public class StatusDatabaseUtils {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static Status getStatusFromResultSet(ResultSet result) throws SQLException {
+        return Status.getStatusBuilder()
+                .setStatusId(result.getInt("status_id"))
+                .setStatusName(result.getString("status_name"))
+                .setStatusHexColor(result.getString("status_hex_color"))
+                .setStatusCreationDate(result.getString("status_creation_date"))
+                .build();
     }
 }

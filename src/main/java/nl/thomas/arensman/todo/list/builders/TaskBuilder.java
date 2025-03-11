@@ -9,8 +9,8 @@ public class TaskBuilder {
     private String taskName;
     private int taskStatus;
     private int taskPriority;
-    private LocalDateTime taskDeadlineDate;
-    private LocalDateTime taskCreationDate;
+    private String taskDeadlineDate;
+    private String taskCreationDate;
 
     public TaskBuilder setTaskId(int taskId) {
         this.taskId = taskId;
@@ -32,12 +32,12 @@ public class TaskBuilder {
         return this;
     }
 
-    public TaskBuilder setTaskDeadlineDate(LocalDateTime taskDeadlineDate) {
+    public TaskBuilder setTaskDeadlineDate(String taskDeadlineDate) {
         this.taskDeadlineDate = taskDeadlineDate;
         return this;
     }
 
-    public TaskBuilder setTaskCreationDate(LocalDateTime taskCreationDate) {
+    public TaskBuilder setTaskCreationDate(String taskCreationDate) {
         this.taskCreationDate = taskCreationDate;
         return this;
     }
@@ -58,11 +58,11 @@ public class TaskBuilder {
         return taskPriority;
     }
 
-    public LocalDateTime getTaskDeadlineDate() {
+    public String getTaskDeadlineDate() {
         return taskDeadlineDate;
     }
 
-    public LocalDateTime getTaskCreationDate() {
+    public String getTaskCreationDate() {
         return taskCreationDate;
     }
 

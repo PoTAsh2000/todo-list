@@ -9,8 +9,8 @@ public class Task {
     private final String taskName;
     private final int taskStatus;
     private final int taskPriority;
-    private final LocalDateTime taskDeadlineDate;
-    private final LocalDateTime taskCreationDate;
+    private final String taskDeadlineDate;
+    private final String taskCreationDate;
 
     public Task(TaskBuilder taskBuilder) {
         this.taskId = taskBuilder.getTaskId();
@@ -41,11 +41,11 @@ public class Task {
         return taskPriority;
     }
 
-    public LocalDateTime getTaskDeadlineDate() {
+    public String getTaskDeadlineDate() {
         return taskDeadlineDate;
     }
 
-    public LocalDateTime getTaskCreationDate() {
+    public String getTaskCreationDate() {
         return taskCreationDate;
     }
 }

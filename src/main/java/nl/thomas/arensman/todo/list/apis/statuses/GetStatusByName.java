@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static nl.thomas.arensman.todo.list.utils.database.StatusDatabaseUtils.getStatusFromResultSet;
 import static nl.thomas.arensman.todo.list.utils.database.StatusDatabaseUtils.selectStatusWhereName;
 import static nl.thomas.arensman.todo.list.utils.HttpUtils.*;
 
@@ -35,15 +36,6 @@ public class GetStatusByName {
         } catch (Exception e) {
             return createErrorResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR, getDefaultHeaders());
         }
-    }
-
-    private static Status getStatusFromResultSet(ResultSet result) throws SQLException {
-        return Status.getStatusBuilder()
-                .setStatusId(result.getInt("status_id"))
-                .setStatusName(result.getString("status_name"))
-                .setStatusHexColor(result.getString("status_hex_color"))
-                .setStatusCreationDate(result.getString("status_creation_date"))
-                .build();
     }
 
     private static void validateResultSet(ResultSet resultSet, String statusName) throws SQLException {

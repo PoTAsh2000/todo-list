@@ -1,0 +1,6 @@
+{
+  "task_name": "string",
+  "task_status_name": "string",
+  "task_priority": 0,
+  "task_deadline": "mysql_datetime_string"
+}

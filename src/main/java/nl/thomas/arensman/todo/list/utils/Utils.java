@@ -3,6 +3,8 @@ package nl.thomas.arensman.todo.list.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -30,6 +32,21 @@ public class Utils {
         for (int i = 0; i < charArray.length; i++)
             stringArray[i] = String.valueOf(charArray[i]);
         return stringArray;
+    }
+
+    public static boolean strMatchesDateTimePattern (String str, String pattern) {
+        try {
+            LocalDateTime.parse(str, DateTimeFormatter.ofPattern(pattern));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static void preparedStatementSetNullableInt(PreparedStatement preparedStatement, int index, Integer intValue) throws SQLException {
+        preparedStatement.setObject(index, null);
+        if (intValue != null)
+            preparedStatement.setInt(index, intValue);
     }
 
     public static String marshalObjectToJsonString (Object object) {
