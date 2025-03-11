@@ -47,6 +47,7 @@ public class TagsDatabaseUtils {
     }
 
     public static Tag tagResultSetToTag (ResultSet resultSet) throws SQLException {
+        resultSet.next();
         return getTagBuilder()
                 .setTagId(resultSet.getInt("tag_id"))
                 .setTagName(resultSet.getString("tag_name"))
@@ -69,4 +70,27 @@ public class TagsDatabaseUtils {
         }
     }
 
+    public static void updateTagWhereId(DataSource dataSource, TagBodyRequest tagBodyRequest, int tagId) {
+        final String query = "UPDATE `tags` SET `tag_name` = ?, `tag_hex_color` = ? WHERE `tag_id` = ?";
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, tagBodyRequest.getTagName());
+            preparedStatement.setString(2, tagBodyRequest.getTagHexColor());
+            preparedStatement.setInt(3, tagId);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void deleteTagWhereId (DataSource dataSource, int tagId) {
+        final String query = "DELETE FROM `tags` WHERE (`tag_id` = ?)";
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, tagId);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

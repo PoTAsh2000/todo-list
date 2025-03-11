@@ -2,11 +2,12 @@ package nl.thomas.arensman.todo.list.apis.tags;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.thomas.arensman.todo.list.json.schemas.TagBodyRequest;
-import nl.thomas.arensman.todo.list.utils.database.TagsDatabaseUtils;
+import nl.thomas.arensman.todo.list.models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,32 +18,49 @@ import java.sql.SQLException;
 
 import static nl.thomas.arensman.todo.list.utils.HttpUtils.*;
 import static nl.thomas.arensman.todo.list.utils.Utils.*;
-import static nl.thomas.arensman.todo.list.utils.database.TagsDatabaseUtils.selectTagWhereName;
+import static nl.thomas.arensman.todo.list.utils.database.TagsDatabaseUtils.*;
 
 @RestController
-public class PostNewTag {
-
-    public static final String POST_NEW_TAG = "/tag";
+public class PatchTagById {
 
     @Autowired
     private DataSource dataSource;
 
-    @PostMapping(POST_NEW_TAG)
-    public ResponseEntity<String> postNewTag (@RequestBody String requestBody) {
+    private static final String PATCH_TAG_BY_ID_ENDPOINT = "/tag/{tagId}";
+
+    @PatchMapping(PATCH_TAG_BY_ID_ENDPOINT)
+    public ResponseEntity<String> patchTagById (@PathVariable String tagId, @RequestBody String requestBody) {
         try {
             TagBodyRequest tagBodyRequest = new ObjectMapper().readValue(requestBody, TagBodyRequest.class);
 
+            validateTagId(tagId);
+            validateTagExists(tagId);
+            validateTagName(tagBodyRequest.getTagName());
             validateHexColor(tagBodyRequest.getTagHexColor());
-            validateTagName(dataSource, tagBodyRequest.getTagName());
 
-            TagsDatabaseUtils.postNewTag(dataSource, tagBodyRequest);
-            return createResponseEntity(String.format("Record '%s' was successfully created", tagBodyRequest.getTagName()), HttpStatus.CREATED, getDefaultHeaders());
+            ResultSet existingTag = selectTagWhereId(dataSource, Integer.parseInt(tagId));
+            Tag tag = tagResultSetToTag(existingTag);
+
+            updateTagWhereId(dataSource, tagBodyRequest, Integer.parseInt(tagId));
+
+            return createResponseEntity(String.format("Tag with tag_id: '%s' and tag_name: '%s' was updated successfully", tagId, tag.getTagName()), HttpStatus.OK, getDefaultHeaders());
         } catch (Exception e) {
             return createErrorResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR, getDefaultHeaders());
         }
     }
 
-    private static void validateTagName (DataSource dataSource, String tagName) throws SQLException {
+    private void validateTagId(String tagId) {
+        if (!strIsIntParsable(tagId))
+            throw new RuntimeException("tag_id must be of type integer");
+    }
+
+    private void validateTagExists (String tagId) throws SQLException {
+        ResultSet resultSet = selectTagWhereId(dataSource, Integer.parseInt(tagId));
+        if (!resultSet.next())
+            throw new RuntimeException("there is no existing tag with tag_id: " + tagId);
+    }
+
+    private void validateTagName (String tagName) throws SQLException {
         final String tagNameConstraints = "Tag Name field constraints: String name max length = '16' and can only contain characters of pattern [a-zA-Z]";
 
         if (tagName.length() > 16)
