@@ -53,7 +53,7 @@ public class TaskDatabaseUtils {
         final String query = "SELECT * FROM `tasks` WHERE `task_name` = ?";
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, name.toUpperCase());
+            preparedStatement.setString(1, name);
             return preparedStatement.executeQuery();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -71,4 +71,18 @@ public class TaskDatabaseUtils {
         }
     }
 
+    public static void updateTaskById (DataSource dataSource, String name, Integer status_id, Integer priority, String deadline, Integer id) {
+        final String query = "UPDATE `tasks` SET `task_name` = ?, `task_status` = ?, `task_priority` = ?, `task_deadline_date` = ? WHERE task_id = ?";
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, name);
+            preparedStatement.setInt(2, status_id);
+            preparedStatementSetNullableInt(preparedStatement, 3, priority);
+            preparedStatement.setString(4, deadline);
+            preparedStatement.setInt(5, id);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
