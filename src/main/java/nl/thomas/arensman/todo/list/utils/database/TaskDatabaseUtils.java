@@ -49,6 +49,17 @@ public class TaskDatabaseUtils {
         }
     }
 
+    public static ResultSet selectTaskByName(DataSource dataSource, String name) {
+        final String query = "SELECT * FROM `tasks` WHERE `task_name` = ?";
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, name.toUpperCase());
+            return preparedStatement.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void deleteTaskById (DataSource dataSource, int taskId) {
         final String query = "DELETE FROM `tasks` WHERE `task_id` = ?";
         try (Connection connection = dataSource.getConnection()) {
